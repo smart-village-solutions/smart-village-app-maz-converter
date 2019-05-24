@@ -2,11 +2,11 @@
 
 set -e
 
-# Remove a potentially pre-existing server.pid for Rails.
-rm -f /myapp/tmp/pids/server.pid
+DB=${DB_HOST:-db:5432}
+
+dockerize -wait tcp://$DB -timeout 30s
 
 npm set audit false
-rake db:create
 rake db:migrate
 
 exec "$@"

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Record < ApplicationRecord
   audited only: :updated_at
-
+  before_save :convert_json_to_hash
   attr_accessor :current_user
 
   # def initialize(current_user: nil)
@@ -8,22 +10,16 @@ class Record < ApplicationRecord
   #   super
   # end
 
-  def load_json_data
 
-  end
-
-  def convert_to_json(hash_data)
-    hash_data.to_json
-  end
-
+  private
   def convert_json_to_hash
     news_data = []
 
-    json_doc = JSON.parse(File.read("doc/Klimawandel.json"))
-
-    news_data << parse_single_news_from_json(json_doc)
-    byebug
-    self.json_data = { news_items: news_data }
+    json_to_import = self.json_data
+    json_doc.each do |json_item|
+      news_data << parse_single_news_from_json(json_item)
+    end
+    self.sva_json_data = { news_items: news_data }
   end
 
   def parse_single_news_from_json(json_hash)
@@ -48,16 +44,16 @@ class Record < ApplicationRecord
 
   def parse_address(json_hash)
     {
-     city: json_hash["location_name"]["value"],
-     geo_location: {
-       latitude: json_hash["geo_location"]["value"]["latitude"],
-       longitude: json_hash["geo_location"]["value"]["longitude"]
-     }
+      city: json_hash["location_name"]["value"],
+      geo_location: {
+        latitude: json_hash["geo_location"]["value"]["latitude"],
+        longitude: json_hash["geo_location"]["value"]["longitude"]
+      }
     }
   end
 
   def parse_url(json_hash)
-    # todo prüfen ob mit http wenn mit dann description absolute
+    # TODO: prüfen ob mit http wenn mit dann description absolute
     # otherwise relative
     # prüfen ob url mit http://www.maz-online anfängt und nur falls ja parsen.
     json_hash["portal_urls"].map do |url|

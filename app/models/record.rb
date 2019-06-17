@@ -3,20 +3,13 @@
 class Record < ApplicationRecord
   audited only: :updated_at
   before_save :convert_json_to_hash
-  attr_accessor :current_user
-
-  # def initialize(current_user: nil)
-  #   @current_user = current_user
-  #   super
-  # end
-
 
   private
   def convert_json_to_hash
     news_data = []
 
-    json_to_import = self.json_data
-    json_doc.each do |json_item|
+    json_to_import = json_data
+    json_to_import.each do |json_item|
       news_data << parse_single_news_from_json(json_item)
     end
     self.sva_json_data = { news_items: news_data }
@@ -24,6 +17,8 @@ class Record < ApplicationRecord
 
   def parse_single_news_from_json(json_hash)
     {
+      external_id: json_hash["_id"],
+      title: json_hash["title"],
       author: "Tim Test",
       full_version: "???",
       characters_to_be_shown: "???",

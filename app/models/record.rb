@@ -3,8 +3,10 @@
 class Record < ApplicationRecord
   audited only: :updated_at
   before_save :convert_json_to_hash
+  after_save :send_json_to_server
 
   private
+
   def convert_json_to_hash
     news_data = []
 
@@ -56,6 +58,18 @@ class Record < ApplicationRecord
         url: url["portal_url"],
         description: ""
       }
+    end
+  end
+
+  def send_json_to_server
+    access_token = Authentication.new.access_token
+    url = Rails.application.credentials.target_server[:url]
+
+    begin
+      result = ApiRequestService.new(url, nil, nil, self.sva_json_data, {Authorization: "Bearer #{access_token}"}).post_request
+      self.update_columns(updated_at: Time.now, audit_comment: result.body)
+    rescue => e
+      self.update_columns(updated_at: Time.now, audit_comment: e)
     end
   end
 

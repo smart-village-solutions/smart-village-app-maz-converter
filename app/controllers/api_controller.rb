@@ -1,5 +1,5 @@
 class ApiController < ApplicationController
   def create
-    Record.create(json_data: "")
+    Record.create(json_data: params[data])
   end
 end

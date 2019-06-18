@@ -10,9 +10,9 @@ class ContentBlockParser
 
     def self.parse_single_content_block(data)
       {
-        title: data["title"]["value"],
-        intro: data["intro"]["value"],
-        body: data["body"]["value"],
+        title: data.dig("title", "value"),
+        intro: data.dig("intro", "value"),
+        body: data.dig("body", "value"),
         media_contents: media_contents(data)
       }
     end
@@ -35,12 +35,12 @@ class ContentBlockParser
     def self.article_image(data)
       {
         content_type: "image",
-        copyright: data["article_image_photographer"]["value"],
-        caption: data["article_image_caption"]["value"],
-        width: data["article_image"]["value"]["width"],
-        height: data["article_image"]["value"]["height"],
+        copyright: data.dig("article_image_photographer", "value"),
+        caption: data.dig("article_image_caption", "value"),
+        width: data.dig("article_image", "value", "width"),
+        height: data.dig("article_image", "value", "height"),
         source_url: {
-          url: data["article_image"]["value"]["url"]
+          url: data.dig("article_image", "value", "url")
         }
       }
     end
@@ -55,14 +55,16 @@ class ContentBlockParser
     # @return [<Type>] <description>
     #
     def self.related_objects_images(data)
+      return nil unless data["related_objects"].first.present?
+
       data["related_objects"].first["images"].map do |image|
         {
-          content_type: image["caption"]["value"],
-          copyright: image["photographer"]["value"],
-          width: image["image"]["value"]["width"],
-          height: image["image"]["value"]["height"],
+          content_type: image.dig("caption", "value"),
+          copyright: image.dig("photographer", "value"),
+          width: image.dig("image", "value", "width"),
+          height: image.dig("image", "value", "height"),
           source_url: {
-            url: image["image"]["value"]["url"]
+            url: image.dig("image", "value", "url")
           }
         }
       end

@@ -9,7 +9,6 @@ class ApiController < ApplicationController
     @record = Record.new(json_data: maz_json)
 
     if @record.save
-      byebug
       render json: {
         message: "News Article was successfully imported"
       }, status: 201

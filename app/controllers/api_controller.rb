@@ -24,8 +24,7 @@ class ApiController < ApplicationController
   private
 
     def restrict_access
-      whitelist = ["0.0.0.0", "127.0.0.1", "18.194.118.243"].freeze
-
+      whitelist = Rails.application.credentials.whitelist[:ips]
       unless whitelist.include? request.remote_ip
         render json: {
           error_message: "Access denied"

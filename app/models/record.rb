@@ -45,7 +45,7 @@ class Record < ApplicationRecord
     # TODO: prüfen ob mit http wenn mit dann description absolute
     # otherwise relative
     # prüfen ob url mit http://www.maz-online anfängt und nur falls ja parsen.
-    return nil if json_hash.dig("portal_urls")
+    return nil if json_hash.dig("portal_urls").blank?
     json_hash.dig("portal_urls").map do |url|
       {
         url: url["portal_url"],

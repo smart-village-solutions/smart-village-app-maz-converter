@@ -36,9 +36,9 @@ class ContentBlockParser
       {
         content_type: "image",
         copyright: data.dig("article_image_photographer", "value"),
-        caption: data.dig("article_image_caption", "value"),
-        width: data.dig("article_image", "value", "width"),
-        height: data.dig("article_image", "value", "height"),
+        caption_text: data.dig("article_image_caption", "value"),
+        width: data.dig("article_image", "value", "width").to_i,
+        height: data.dig("article_image", "value", "height").to_i,
         source_url: {
           url: data.dig("article_image", "value", "url")
         }

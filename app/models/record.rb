@@ -15,7 +15,6 @@ class Record < ApplicationRecord
       result = {
         external_id: json_hash.dig("_id"),
         title: json_hash.dig("title", "value"),
-        author: "Tim Test",
         publication_date: json_hash.dig("publication_date", "value"),
         published_at: json_hash.dig("publish_date", "value"),
         show_publish_date: json_hash.dig("show_publish_date", "value"),

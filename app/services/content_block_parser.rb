@@ -63,11 +63,18 @@ class ContentBlockParser
           content_type: image.dig("caption", "value"),
           copyright: image.dig("photographer", "value"),
           width: image.dig("image", "value", "width"),
-          height: image.dig("image", "value", "height"),
-          source_url: {
-            url: image.dig("image", "value", "url")
-          }
-        }
+          height: image.dig("image", "value", "height")
+        }.merge(parse_image_url(image))
       end
+    end
+
+    def parse_image_url(image)
+      return {} if image.dig("image", "value", "url").blank?
+
+      {
+        source_url: {
+          url: image.dig("image", "value", "url")
+        }
+      }
     end
 end

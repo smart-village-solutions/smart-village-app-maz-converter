@@ -11,6 +11,7 @@ class ApiController < ApplicationController
     @record = Record.new(json_data: maz_json)
 
     if @record.save
+      send_sva_json_to_server(@record)
       render json: {
         message: "News Article was successfully imported"
       }, status: 201
@@ -29,6 +30,18 @@ class ApiController < ApplicationController
         render json: {
           error_message: "Access denied"
         }, status: 401
+      end
+    end
+
+    def send_sva_json_to_server(record)
+      access_token = Authentication.new.access_token
+      url = Rails.application.credentials.target_server[:url]
+
+      begin
+        result = ApiRequestService.new(url, nil, nil, record.sva_json_data, Authorization: "Bearer #{access_token}").post_request
+        record.update(updated_at: Time.now, audit_comment: result.body)
+      rescue StandardError => e
+        record.update(updated_at: Time.now, audit_comment: e)
       end
     end
 end

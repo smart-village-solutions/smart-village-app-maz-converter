@@ -48,7 +48,6 @@ class Record < ApplicationRecord
       # prüfen ob url mit http://www.maz-online anfängt und nur falls ja parsen.
       return {} if json_hash.dig("portal_urls").blank?
       return {} if json_hash.dig("portal_urls").first.blank?
-      byebug
       {
         source_url: {
           url: json_hash.dig("portal_urls").first["portal_url"],

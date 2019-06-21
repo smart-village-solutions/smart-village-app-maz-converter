@@ -59,6 +59,7 @@ class ContentBlockParser
     def self.related_objects_images(data)
       return nil unless data["related_objects"].present?
       return nil unless data["related_objects"].first.present?
+      return nil unless data["related_objects"].first["images"].present?
 
       data["related_objects"].first["images"].map do |image|
         {

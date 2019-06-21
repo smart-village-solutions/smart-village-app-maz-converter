@@ -60,7 +60,7 @@ class Record < ApplicationRecord
     def parse_publication_date(json_hash)
       return Time.zone.now unless json_hash.dig("publish_date", "value").present?
 
-      json_hash.dig("publish_date", "value").present?
+      json_hash.dig("publish_date", "value")
     end
 end
 

@@ -28,9 +28,10 @@ class ContentBlockParser
     # Bilder kommen bei der Maz zum einen aus den keys die mit article images beginnen.
     # diese Methode parsed dieses article image in ein media content object
     #
-    # @param [<Type>] data <description>
+    # @param [HASH/JSON] data JSON Data
     #
-    # @return [<Type>] <description>
+    # @return [<HASH/JSON>] JSON Objekt welches mit dem media_content model der main_app_server app
+    #  korrespondiert.
     #
     def self.article_image(data)
       {
@@ -46,13 +47,14 @@ class ContentBlockParser
     end
 
     #
-    # Bilder kommen bei der Maz zum einen aus ddem images array der sich
+    # Bilder kommen bei der Maz zum Anderen aus dem images array der sich
     # im related_objects array befindet.
     # diese Methode parsed diese images in je ein media content object.
     #
-    # @param [<Type>] data <description>
+    # @param [JSON] data JSON Hash
     #
-    # @return [<Type>] <description>
+    # @return [<HASH/JSON>] JSON Objekt welches mit dem media_content model der main_app_server app
+    #  korrespondiert.
     #
     def self.related_objects_images(data)
       return nil unless data["related_objects"].present?

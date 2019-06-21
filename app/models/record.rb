@@ -23,7 +23,6 @@ class Record < ApplicationRecord
         content_blocks: ContentBlockParser.perform(json_hash)
       }
       result.merge(parse_url(json_data))
-
     end
 
     def parse_address(json_hash)
@@ -48,6 +47,7 @@ class Record < ApplicationRecord
       # prüfen ob url mit http://www.maz-online anfängt und nur falls ja parsen.
       return {} if json_hash.dig("portal_urls").blank?
       return {} if json_hash.dig("portal_urls").first.blank?
+
       {
         source_url: {
           url: json_hash.dig("portal_urls").first["portal_url"],

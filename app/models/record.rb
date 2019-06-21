@@ -22,7 +22,6 @@ class Record < ApplicationRecord
         address: parse_address(json_hash),
         content_blocks: ContentBlockParser.perform(json_hash)
       }
-      byebug
       result.merge(parse_url(json_data))
     end
 

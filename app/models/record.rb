@@ -16,12 +16,13 @@ class Record < ApplicationRecord
         external_id: json_hash.dig("_id"),
         title: json_hash.dig("title", "value"),
         publication_date: json_hash.dig("publication_date", "value"),
-        published_at: json_hash.dig("publish_date", "value"),
+        published_at: parse_publication_date(json_hash),
         show_publish_date: json_hash.dig("show_publish_date", "value"),
         news_type: "news article",
         address: parse_address(json_hash),
         content_blocks: ContentBlockParser.perform(json_hash)
       }
+      byebug
       result.merge(parse_url(json_data))
     end
 
@@ -54,6 +55,12 @@ class Record < ApplicationRecord
           description: ""
         }
       }
+    end
+
+    def parse_publication_date(json_hash)
+      return Time.zone.now unless json_hash.dig("publish_date", "value").present?
+
+      json_hash.dig("publish_date", "value").present?
     end
 end
 

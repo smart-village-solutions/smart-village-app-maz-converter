@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
-  before_action :restrict_access
+  #before_action :restrict_access
 
   def create
     params.delete(:action)

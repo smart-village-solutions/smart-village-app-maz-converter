@@ -71,7 +71,7 @@ class ContentBlockParser
       end
     end
 
-    def parse_image_url(image)
+    def self.parse_image_url(image)
       return {} if image.dig("image", "value", "url").blank?
 
       {

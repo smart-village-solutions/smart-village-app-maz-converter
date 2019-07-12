@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApiController < ApplicationController
-  #before_action :restrict_access
+  # before_action :restrict_access
 
   def create
     params.delete(:action)
@@ -23,6 +23,13 @@ class ApiController < ApplicationController
   end
 
   def destroy
+    access_token = Authentication.new.access_token
+    url = Rails.application.credentials.target_server[:url]
+    json = create_json_to_delete_news_item(params)
+    result = ApiRequestService.new(url, nil, nil, json, Authorization: "Bearer #{access_token}").post_request
+    render json: {
+      message: "#{result} News Article was successfully deleted"
+    }, status: 200
   end
 
   private
@@ -46,5 +53,12 @@ class ApiController < ApplicationController
       rescue StandardError => e
         record.update(updated_at: Time.now, audit_comment: e)
       end
+    end
+
+    def create_json_to_delete_news_item(params)
+      { news: [{
+        external_id: params[:id],
+        action: params[:action]
+      }] }
     end
 end

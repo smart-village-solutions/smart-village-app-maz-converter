@@ -22,6 +22,9 @@ class ApiController < ApplicationController
     end
   end
 
+  def destroy
+  end
+
   private
 
     def restrict_access

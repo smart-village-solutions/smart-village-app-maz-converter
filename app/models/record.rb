@@ -15,8 +15,8 @@ class Record < ApplicationRecord
       result = {
         external_id: json_hash.dig("_id"),
         title: json_hash.dig("title", "value"),
-        publication_date: json_hash.dig("publication_date", "value"),
-        published_at: parse_publication_date(json_hash),
+        publication_date: parse_date(json_hash, "publication_date"),
+        published_at: parse_date(json_hash, "publish_date"),
         show_publish_date: json_hash.dig("show_publish_date", "value"),
         news_type: "news article",
         address: parse_address(json_hash),
@@ -56,10 +56,10 @@ class Record < ApplicationRecord
       }
     end
 
-    def parse_publication_date(json_hash)
-      return Time.zone.now unless json_hash.dig("publish_date", "value").present?
+    def parse_date(json_hash, date_key)
+      return Time.zone.now unless json_hash.dig(date_key, "value").present?
 
-      json_hash.dig("publish_date", "value", "date") || json_hash.dig("publish_date", "value")
+      json_hash.dig(date_key, "value", "date") || json_hash.dig("publish_date", "value")
     end
 end
 

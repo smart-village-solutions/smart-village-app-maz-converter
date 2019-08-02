@@ -32,6 +32,18 @@ class ApiController < ApplicationController
     }, status: 200
   end
 
+  def send_to_main_server
+    records = Record.where("created_at >= ?", 14.days.ago)
+    if records.present?
+      records.each do |record|
+        send_sva_json_to_server(record)
+      end
+      render json: { message: "#{records.count} were send to main server" }
+    else
+      render json: { message: "No records to send" }
+    end
+  end
+
   private
 
     def restrict_access

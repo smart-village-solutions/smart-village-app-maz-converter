@@ -38,10 +38,26 @@ class ApiController < ApplicationController
       records.each do |record|
         send_sva_json_to_server(record)
       end
-      render json: { message: "#{records.count} were send to main server" }
+      render json: { message: "#{records.count} records were send to main server" }
     else
       render json: { message: "No records to send" }
     end
+  end
+
+  def re_import_records
+    records = Record.where("created_at >= ?", 14.days.ago)
+    results = {}
+    records.each do |record|
+      maz_json = record.json_data
+      news_data = record.send(:parse_single_news_from_json, maz_json)
+      record.sva_json_data = { news: [news_data] }
+      if record.save
+        results[record.id] = "Record with id '#{record.id}'was re-imported."
+      else
+        results[record.id] = record.errors.full_messages.to_s
+      end
+    end
+    render json: results.to_json
   end
 
   private

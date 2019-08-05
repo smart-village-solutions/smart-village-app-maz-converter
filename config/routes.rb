@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   post "json", to: "api#create"
   get "send", to: "api#send_to_main_server"
+  get "reimport", to: "api#re_import_records"
 
   delete "/json/:id", to: "api#destroy", defaults: { format: "json" }
 

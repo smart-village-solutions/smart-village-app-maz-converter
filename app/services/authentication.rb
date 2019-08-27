@@ -37,5 +37,4 @@ class Authentication
     load_access_tokens
     setting.config["oauth"]["access_token"]
   end
-
 end

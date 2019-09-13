@@ -16,6 +16,7 @@ class ApiController < ApplicationController
         message: "News Article was successfully imported"
       }, status: 201
     else
+      Rollbar.error("News Item couldn't be imported.", json_data: maz_json)
       render json: {
         error_message: "Error. News Item couldn't be imported. Please contact the admin."
       }, status: 400

@@ -63,7 +63,8 @@ class ContentBlockParser
 
       data["related_objects"].first["images"].map do |image|
         {
-          content_type: image.dig("caption", "value"),
+          content_type: "image",
+          caption_text: image.dig("caption", "value"),
           copyright: image.dig("photographer", "value"),
           width: image.dig("image", "value", "width"),
           height: image.dig("image", "value", "height")

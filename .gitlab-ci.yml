@@ -1,9 +1,12 @@
+image: nixos/nix:2.2.1
+
 variables:
   DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
   TARGET_HOST: smartvillage.app
 
 services:
-  - docker:dind
+  - docker:19.03.0-dind
 
 stages:
   - build
@@ -13,6 +16,7 @@ stages:
 build:
   stage: build
   before_script:
+    - nix-env -iA nixpkgs.docker
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
@@ -23,6 +27,7 @@ build:
 tag:
   stage: tag
   before_script:
+    - nix-env -iA nixpkgs.docker
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
@@ -34,6 +39,7 @@ tag:
 deploy:
   stage: deploy
   before_script:
+    - nix-env -iA nixpkgs.openssh
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh

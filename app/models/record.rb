@@ -2,14 +2,19 @@
 
 class Record < ApplicationRecord
   audited only: :updated_at
-  before_create :convert_maz_json_to_sva_json
+
+  has_one_attached :image
+  has_many_attached :related_images
+
+
+  def convert_maz_json_to_sva_json
+    return if json_data.blank?
+
+    news_data = parse_single_news_from_json(json_data)
+    self.sva_json_data = { news: [news_data] }
+  end
 
   private
-
-    def convert_maz_json_to_sva_json
-      news_data = parse_single_news_from_json(json_data)
-      self.sva_json_data = { news: [news_data] }
-    end
 
     def parse_single_news_from_json(json_hash)
       result = {
@@ -20,7 +25,7 @@ class Record < ApplicationRecord
         show_publish_date: json_hash.dig("show_publish_date", "value"),
         news_type: "news article",
         address: parse_address(json_hash),
-        content_blocks: ContentBlockParser.perform(json_hash)
+        content_blocks: ContentBlockParser.perform(json_hash, self)
       }
       result.merge(parse_url(json_data))
     end

@@ -8,7 +8,8 @@ class ApiController < ApplicationController
     params.delete(:controller)
     maz_json = params.as_json
 
-    @record = Record.new(json_data: maz_json)
+    @record = Record.create(json_data: maz_json)
+    @record.convert_maz_json_to_sva_json
 
     if @record.save
       send_sva_json_to_server(@record)

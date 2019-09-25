@@ -14,6 +14,15 @@ local:
 #   region: us-east-1
 #   bucket: your_own_bucket
 
+minio:
+  service: S3
+  access_key_id: <%= Rails.application.credentials.dig(:minio, :access_key_id) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:minio, :secret_access_key) %>
+  region: us-east-1
+  bucket: fileserver
+  endpoint: "https://minio.smart-village.app"
+  force_path_style: true
+
 # Remember not to checkin your GCS keyfile to a repository
 # google:
 #   service: GCS

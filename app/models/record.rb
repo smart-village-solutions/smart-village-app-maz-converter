@@ -18,7 +18,7 @@ class Record < ApplicationRecord
 
     def parse_single_news_from_json(json_hash)
       result = {
-        external_id: json_hash.dig("_id"),
+        external_id: json_hash.dig("_id").to_s,
         title: json_hash.dig("title", "value"),
         publication_date: parse_date(json_hash, "publication_date"),
         published_at: parse_date(json_hash, "publish_date"),
